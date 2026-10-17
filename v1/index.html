@@ -1,0 +1,1108 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Кабинет тренера</title>
+<script src="https://telegram.org/js/telegram-web-app.js?59"></script>
+<style>
+:root{
+  --brand:#F2542D; --brand-bg:rgba(242,84,45,.12); --on-brand:#fff;
+  --bg:#F2F2F7; --card:#fff; --text:#111114; --hint:#8A8A93; --link:#F2542D;
+  --sep:rgba(60,60,67,.14); --muted-bg:rgba(118,118,128,.12); --sw-off:rgba(120,120,128,.24);
+  --ok:#1E9E57; --ok-bg:rgba(30,158,87,.12); --warn:#B26B00; --warn-bg:rgba(245,166,35,.17); --bad:#E0393E; --bad-bg:rgba(224,57,62,.11);
+  --t-pers:#F2542D; --t-func:#7C5CFF; --t-stretch:#12A594; --t-split:#E8A010;
+  --chat:#D9E4D2; --kb:rgba(255,255,255,.72);
+  --safe-b:max(env(safe-area-inset-bottom, 0px), var(--tg-safe-area-inset-bottom, 0px));
+}
+:root.dark{
+  --bg:#000; --card:#1C1C1E; --text:#F2F2F7; --hint:#8E8E93; --link:#FF7A55;
+  --sep:rgba(255,255,255,.1); --muted-bg:rgba(118,118,128,.24); --sw-off:rgba(120,120,128,.36);
+  --ok:#3DD68C; --ok-bg:rgba(61,214,140,.15); --warn:#F7B955; --warn-bg:rgba(247,185,85,.15); --bad:#FF6B6B; --bad-bg:rgba(255,107,107,.15);
+  --brand-bg:rgba(242,84,45,.2); --chat:#0E1621; --kb:rgba(255,255,255,.1);
+}
+:root.tg{
+  --bg:var(--tg-theme-secondary-bg-color, #F2F2F7);
+  --card:var(--tg-theme-section-bg-color, var(--tg-theme-bg-color, #fff));
+  --text:var(--tg-theme-text-color, #111114);
+  --hint:var(--tg-theme-hint-color, #8A8A93);
+  --sep:var(--tg-theme-section-separator-color, rgba(128,128,128,.2));
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.4 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;overscroll-behavior:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;cursor:pointer;text-align:inherit}
+input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:560px;margin:0 auto;padding:14px 16px calc(100px + var(--safe-b))}
+.ic{flex:none;display:block}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px 2px 10px}
+.hello{font-size:14px;color:var(--hint)}
+.title{font-size:28px;font-weight:700;letter-spacing:-.02em;line-height:1.15;margin-top:2px}
+.sec-t{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--hint);text-transform:uppercase;letter-spacing:.03em;margin:20px 6px 8px}
+.card{background:var(--card);border-radius:16px;padding:14px 16px;margin-bottom:10px}
+.list{padding:0 16px}
+.row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:.5px solid var(--sep);width:100%}
+.row:last-child{border-bottom:0}
+.rowmain{display:flex;align-items:center;gap:12px;flex:1;min-width:0;text-align:left}
+.chev{color:var(--hint);opacity:.6}
+.mid{flex:1;min-width:0}
+.nm{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub{font-size:13px;color:var(--hint);margin-top:1px}
+.hint{font-size:13px;color:var(--hint);margin:8px 6px 0;line-height:1.45}
+.pill{font-size:12px;font-weight:600;padding:4px 9px;border-radius:999px;white-space:nowrap;flex:none}
+.ok{color:var(--ok);background:var(--ok-bg)}
+.warn{color:var(--warn);background:var(--warn-bg)}
+.bad{color:var(--bad);background:var(--bad-bg)}
+.muted{color:var(--hint);background:var(--muted-bg)}
+.live{color:var(--on-brand);background:var(--brand)}
+
+.wnav{display:flex;align-items:center;gap:6px;margin:6px 0 8px}
+.wnav span{flex:1;font-weight:600;font-size:15px;padding-left:4px}
+.icon-btn{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:var(--hint);background:var(--card)}
+.link{color:var(--link);font-weight:600;font-size:14px;padding:6px 8px}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;background:var(--card);border-radius:16px;padding:6px;margin-bottom:10px}
+.wd{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 0 6px;border-radius:12px;text-align:center;transition:background .15s}
+.wd small{font-size:11px;color:var(--hint)}
+.wd b{font-size:17px;font-weight:600}
+.wd i{width:5px;height:5px;border-radius:50%;background:var(--brand)}
+.wd.today b{color:var(--brand)}
+.wd.sel{background:var(--brand);color:var(--on-brand)}
+.wd.sel small{color:rgba(255,255,255,.85)}
+.wd.sel b{color:var(--on-brand)}
+.wd.sel i{background:#fff}
+
+.sum{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;text-align:center}
+.sum b{display:block;font-size:22px;font-weight:700;letter-spacing:-.02em}
+.sum small{font-size:11.5px;color:var(--hint)}
+.sum-h{font-weight:600;margin-bottom:10px}
+.sum-foot{display:flex;justify-content:space-between;align-items:center;border-top:.5px solid var(--sep);margin-top:12px;padding-top:10px;font-size:14px}
+.sum-foot span{color:var(--hint)}
+.alert{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--warn-bg);border-radius:14px;padding:12px 14px;margin-bottom:10px;color:var(--text)}
+.alert .ic{color:var(--warn)}
+
+.ses{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px 12px 12px;background:var(--card);border-radius:14px;margin-bottom:8px;text-align:left;transition:transform .1s}
+.ses:active{transform:scale(.985)}
+.tm{width:44px;flex:none}
+.tm b{display:block;font-size:16px;font-weight:600;letter-spacing:-.01em}
+.tm small{font-size:12px;color:var(--hint)}
+.bar{width:3px;align-self:stretch;border-radius:2px;background:var(--c);flex:none}
+.ses.past .tm,.ses.past .mid,.ses.past .bar{opacity:.5}
+.ses.cx .nm{text-decoration:line-through;color:var(--hint)}
+.free{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--ok);margin-top:4px;font-weight:500}
+.now{display:flex;align-items:center;gap:8px;margin:2px 4px 10px;color:var(--brand);font-size:12px;font-weight:700}
+.now::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--brand)}
+.now::after{content:'';flex:1;height:2px;background:var(--brand);border-radius:1px}
+.empty{text-align:center;padding:34px 20px 20px;color:var(--hint)}
+.empty b{display:block;color:var(--text);font-size:17px;margin-bottom:4px}
+.faces{display:flex;padding-left:8px;margin-top:6px}
+
+.fab{position:fixed;right:16px;bottom:calc(76px + var(--safe-b));z-index:11;width:56px;height:56px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;box-shadow:0 8px 24px rgba(242,84,45,.38);transition:transform .15s}
+.fab:active{transform:scale(.92)}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;display:grid;grid-template-columns:repeat(4,1fr);padding:6px 4px calc(6px + var(--safe-b));background:var(--card);border-top:.5px solid var(--sep)}
+.tab{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;font-size:10.5px;font-weight:500;color:var(--hint)}
+.tab.on{color:var(--brand)}
+
+#pages .page{position:fixed;inset:0;z-index:20;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;transform:translateX(100%);transition:transform .3s cubic-bezier(.2,.8,.2,1);overscroll-behavior:contain}
+#pages .page.in{transform:none}
+#pages .page .wrap{padding-bottom:calc(36px + var(--safe-b))}
+.back{display:flex;align-items:center;gap:2px;color:var(--link);font-size:16px;font-weight:500;margin:-4px 0 0 -8px;padding:6px}
+.ptitle{font-size:26px;font-weight:700;letter-spacing:-.02em;margin:6px 2px 12px}
+.lead{color:var(--hint);margin:-6px 2px 14px;font-size:14.5px}
+
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:50px;border-radius:14px;background:var(--brand);color:var(--on-brand);font-weight:600;font-size:16px;padding:0 16px;margin-top:10px;transition:opacity .15s,transform .1s;text-align:center}
+.btn:active{transform:scale(.98);opacity:.9}
+.btn.sec{background:var(--card);color:var(--link)}
+.btn.danger{background:var(--card);color:var(--bad)}
+.btn.sm{min-height:34px;width:auto;font-size:14px;border-radius:10px;padding:0 12px;margin:0}
+.btn.tint{background:var(--brand-bg);color:var(--brand)}
+.btn.ghost{background:var(--muted-bg);color:var(--text)}
+.btn.on-ok{background:var(--ok);color:#fff}
+.btn.on-bad{background:var(--bad);color:#fff}
+.acts{display:flex;gap:8px;padding:0 0 12px 52px;flex-wrap:wrap}
+.row.has-acts{border-bottom:0;padding-bottom:8px}
+
+.hero{position:relative;overflow:hidden;padding:16px 16px 16px 21px}
+.hero::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--c)}
+.tag{font-size:12px;font-weight:700;color:var(--c);text-transform:uppercase;letter-spacing:.04em}
+.big{font-size:30px;font-weight:700;letter-spacing:-.02em;margin:4px 0 0}
+.meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:14px;color:var(--hint);margin-top:8px}
+
+.tl{padding:6px 0}
+.tl p{display:flex;gap:11px;align-items:flex-start;margin:0;padding:7px 0;font-size:14px;line-height:1.4}
+.tl p::before{content:'';width:9px;height:9px;border-radius:50%;margin-top:5px;flex:none;background:var(--hint);box-sizing:border-box}
+.tl .t-ok::before{background:var(--ok)}
+.tl .t-warn::before{background:var(--warn)}
+.tl .t-bad::before{background:var(--bad)}
+.tl .t-done::before{background:var(--hint)}
+.tl .t-next{color:var(--hint)}
+.tl .t-next::before{background:transparent;border:2px solid var(--hint)}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips.scroll{flex-wrap:nowrap;overflow-x:auto;margin:0 -16px;padding:0 16px 4px;scrollbar-width:none}
+.chips.scroll::-webkit-scrollbar{display:none}
+.chip{padding:8px 13px;border-radius:999px;background:var(--card);font-size:14px;font-weight:500;white-space:nowrap;text-align:center;transition:background .15s}
+.chip.on{background:var(--brand);color:var(--on-brand)}
+.chip.off{opacity:.35;pointer-events:none}
+.chip small{display:block;font-size:11px;opacity:.75;font-weight:500}
+
+.field{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:8px 0;border-bottom:.5px solid var(--sep)}
+.field:last-child{border-bottom:0}
+.field>span{display:flex;align-items:center;gap:8px}
+.field input{border:0;background:transparent;text-align:right;color:var(--link);font-weight:600;outline:none;min-width:0;font-size:15px;-webkit-appearance:none;appearance:none}
+.txt{display:block;width:100%;border:0;background:transparent;outline:none;resize:vertical;min-height:90px;font-size:15px;padding:12px 0;line-height:1.45}
+.inp{display:block;width:100%;border:0;background:var(--card);border-radius:12px;padding:12px 14px;outline:none;font-size:15px}
+.err{color:var(--bad);font-size:13.5px;margin:10px 6px 0}
+.err:empty{display:none}
+
+.sw{position:relative;width:51px;height:31px;border-radius:16px;background:var(--sw-off);flex:none;transition:background .2s}
+.sw::after{content:'';position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.18);transition:transform .22s cubic-bezier(.3,.7,.3,1)}
+.sw.on{background:var(--brand)}
+.sw.on::after{transform:translateX(20px)}
+.seg{display:flex;background:var(--muted-bg);border-radius:11px;padding:2px;margin:4px 0 12px}
+.seg button{flex:1;text-align:center;padding:7px 0;border-radius:9px;font-size:14px;font-weight:600}
+.seg button.on{background:var(--card);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+:root.dark .seg button.on{background:#3A3A3C}
+
+.av{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:600;font-size:15px;flex:none;background:hsl(var(--h) 80% 91%);color:hsl(var(--h) 50% 32%);object-fit:cover}
+:root.dark .av{background:hsl(var(--h) 32% 25%);color:hsl(var(--h) 80% 82%)}
+.av.lg{width:80px;height:80px;font-size:30px}
+.av.me{width:42px;height:42px}
+.av.xs{width:26px;height:26px;font-size:10.5px;box-shadow:0 0 0 2px var(--card);margin-left:-7px}
+.prog{height:8px;border-radius:4px;background:var(--muted-bg);overflow:hidden;margin:10px 0 6px}
+.prog i{display:block;height:100%;border-radius:4px;background:var(--brand)}
+.prog.low i{background:var(--warn)}
+
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.metric{background:var(--card);border-radius:16px;padding:14px}
+.metric small{font-size:13px;color:var(--hint)}
+.metric b{display:block;font-size:25px;font-weight:700;letter-spacing:-.02em;margin:4px 0 2px;white-space:nowrap}
+.delta{font-size:12.5px;font-weight:600}
+.delta.up{color:var(--ok)} .delta.down{color:var(--bad)} .delta.flat{color:var(--hint)}
+.bars{display:flex;align-items:flex-end;gap:10px;height:150px;padding-top:6px}
+.bars>div{flex:1;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px}
+.bars i{width:100%;max-width:30px;border-radius:7px 7px 4px 4px;background:var(--brand);min-height:4px}
+.bars span{font-size:12px;font-weight:600}
+.bars small{font-size:11.5px;color:var(--hint)}
+.hbar{margin:12px 0}
+.hbar .l{display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px}
+.hbar .track{height:8px;border-radius:4px;background:var(--muted-bg);overflow:hidden}
+.hbar .track i{display:block;height:100%;border-radius:4px;background:var(--c)}
+.att-ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none}
+.big-num{font-size:28px;font-weight:700;letter-spacing:-.02em}
+
+.chat{background:var(--chat);border-radius:16px;padding:14px 12px}
+.bubble{background:var(--card);border-radius:16px 16px 16px 6px;padding:9px 12px 8px;max-width:90%;font-size:14.5px;line-height:1.42}
+.bubble .from{font-size:13px;font-weight:600;color:var(--brand);margin-bottom:2px}
+.bubble .tm2{float:right;font-size:11px;color:var(--hint);margin:8px 0 0 10px}
+.kb{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:4px;max-width:90%}
+.kb button{background:var(--kb);color:var(--text);border-radius:10px;padding:9px 6px;font-size:13.5px;font-weight:600;text-align:center}
+.kb .wide{grid-column:span 2}
+
+.steps{counter-reset:s}
+.step{display:flex;gap:12px;align-items:flex-start;padding:7px 0;font-size:14.5px;line-height:1.4}
+.step::before{counter-increment:s;content:counter(s);width:24px;height:24px;border-radius:50%;background:var(--brand-bg);color:var(--brand);font-weight:700;font-size:13px;display:grid;place-items:center;flex:none}
+.linkbox{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13.5px;background:var(--muted-bg);border-radius:10px;padding:12px;word-break:break-all}
+
+.prof{display:flex;flex-direction:column;align-items:center;text-align:center;padding:4px 0 14px}
+.prof .nm{font-size:22px;font-weight:700;margin-top:10px;white-space:normal}
+.prof .sub{font-size:14.5px;margin-top:2px}
+.prof .pill{margin-top:10px;display:inline-flex;align-items:center;gap:4px}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);text-align:center}
+.trio b{display:block;font-size:20px;font-weight:700}
+.trio small{font-size:12px;color:var(--hint)}
+.trio>div+div{border-left:.5px solid var(--sep)}
+
+.toast{position:fixed;left:50%;bottom:calc(86px + var(--safe-b));z-index:60;transform:translate(-50%,16px);opacity:0;pointer-events:none;background:rgba(30,30,32,.94);color:#fff;font-size:14px;line-height:1.35;padding:11px 16px;border-radius:14px;width:max-content;max-width:calc(100% - 32px);text-align:center;transition:opacity .25s,transform .25s}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.foot{text-align:center;color:var(--hint);font-size:12.5px;margin:22px 0 4px}
+</style>
+</head>
+<body>
+<main id="main" class="wrap"></main>
+<button id="fab" class="fab" data-act="new" aria-label="Добавить тренировку"></button>
+<nav id="tabs" class="tabs"></nav>
+<div id="pages"></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+'use strict';
+
+// Для проверки: ?now=2026-10-10T12:30 подменяет текущее время
+(() => {
+  const q = new URLSearchParams(location.search).get('now');
+  const fixed = q ? new Date(q).getTime() : NaN;
+  if (isNaN(fixed)) return;
+  const Real = Date, offset = fixed - Real.now();
+  window.Date = class extends Real {
+    constructor(...a) { a.length ? super(...a) : super(Real.now() + offset); }
+    static now() { return Real.now() + offset; }
+  };
+})();
+
+/* ===== Настройки прототипа ===== */
+const CONFIG = {
+  botUsername: 'Lizzi_trainer_bot',  // username бота из @BotFather, без @
+  trainerName: 'Марина',            // имя по умолчанию, если открыто не из Telegram
+  place: 'Зал на Ленина, 12',
+};
+
+/* ===== Telegram ===== */
+const tg = window.Telegram && window.Telegram.WebApp;
+const inTG = !!(tg && tg.platform && tg.platform !== 'unknown');
+const ROOT = document.documentElement;
+if (inTG) ROOT.classList.add('tg');
+
+function applyScheme() {
+  const dark = inTG ? tg.colorScheme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  ROOT.classList.toggle('dark', dark);
+  if (inTG) {
+    try { tg.setHeaderColor('secondary_bg_color'); tg.setBackgroundColor('secondary_bg_color'); } catch (e) {}
+  }
+}
+const hap = (t = 'light') => {
+  if (!inTG) return;
+  try {
+    if (t === 'success' || t === 'warning' || t === 'error') tg.HapticFeedback.notificationOccurred(t);
+    else if (t === 'select') tg.HapticFeedback.selectionChanged();
+    else tg.HapticFeedback.impactOccurred(t);
+  } catch (e) {}
+};
+const ask = msg => new Promise(res => {
+  if (inTG && tg.isVersionAtLeast && tg.isVersionAtLeast('6.2')) tg.showConfirm(msg, ok => res(!!ok));
+  else res(window.confirm(msg));
+});
+
+/* ===== Утилиты ===== */
+const pad = n => String(n).padStart(2, '0');
+const dkey = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const fromKey = k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d); };
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+const today0 = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d; };
+const mondayOf = d => addDays(d, -((d.getDay() + 6) % 7));
+const WD = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+const WDF = ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'];
+const MG = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+const MN = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+const fmtDay = d => `${WDF[d.getDay()]}, ${d.getDate()} ${MG[d.getMonth()]}`;
+const fmtShort = d => `${WD[d.getDay()].toLowerCase()}, ${d.getDate()} ${MG[d.getMonth()]}`;
+const toMin = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+const fromMin = m => `${pad(Math.floor(m / 60))}:${pad(m % 60)}`;
+const rub = n => Math.round(n).toLocaleString('ru-RU') + ' ₽';
+const plural = (n, a, b, c) => { const m10 = n % 10, m100 = n % 100; return m10 === 1 && m100 !== 11 ? a : m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20) ? b : c; };
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+const cap1 = s => s.charAt(0).toUpperCase() + s.slice(1);
+const rnd = s => {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  h ^= h >>> 16; h = Math.imul(h, 0x85ebca6b); h ^= h >>> 13; h = Math.imul(h, 0xc2b2ae35); h ^= h >>> 16;
+  return (h >>> 0) / 4294967296;
+};
+function when(d) {
+  const dd = new Date(d); dd.setHours(0, 0, 0, 0);
+  const diff = Math.round((dd - today0()) / 864e5), hm = `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  if (diff === 0) return `сегодня в ${hm}`;
+  if (diff === -1) return `вчера в ${hm}`;
+  if (diff === 1) return `завтра в ${hm}`;
+  return `${fmtShort(d)} в ${hm}`;
+}
+
+/* ===== Иконки (Feather, MIT) ===== */
+const ICONS = {
+  cal: '<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+  users: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  chart: '<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',
+  sliders: '<line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>',
+  plus: '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+  chevL: '<polyline points="15 18 9 12 15 6"/>',
+  chevR: '<polyline points="9 18 15 12 9 6"/>',
+  bell: '<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',
+  check: '<polyline points="20 6 9 17 4 12"/>',
+  x: '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
+  send: '<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>',
+  userPlus: '<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/>',
+  clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+  pin: '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>',
+  search: '<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
+  copy: '<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+  repeat: '<polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
+  card: '<rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>',
+  trend: '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>',
+};
+const ic = (n, s = 20) => `<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]}</svg>`;
+
+/* ===== Демо-данные ===== */
+const TYPES = {
+  pers:    { name: 'Персональная',   dur: 60, price: 2500, cap: 1, color: 'var(--t-pers)' },
+  func:    { name: 'Функциональная', dur: 60, price: 900,  cap: 8, color: 'var(--t-func)', group: true },
+  stretch: { name: 'Растяжка',       dur: 45, price: 1500, cap: 1, color: 'var(--t-stretch)' },
+  split:   { name: 'Сплит',          dur: 60, price: 1800, cap: 2, color: 'var(--t-split)' },
+};
+const PACKS = [
+  { n: 8,  price: 18000, days: 30 },
+  { n: 12, price: 25200, days: 45 },
+  { n: 1,  price: 2500,  days: 14 },
+];
+const clients = [
+  { id: 'c1',  g: 'f', name: 'Ольга Демидова',    goal: 'Минус 6 кг к лету',                  pack: [8, 5, 20],   since: 41, note: 'Любит круговые. Следить за техникой становой.' },
+  { id: 'c2',  g: 'f', name: 'Анна Кузнецова',    goal: 'Подготовка к полумарафону',          pack: [12, 2, 6],   since: 63, note: 'Забег 15 ноября — за неделю до старта снижаем объём.' },
+  { id: 'c3',  g: 'f', name: 'Мария Соколова',    goal: 'Восстановление после травмы колена', pack: [12, 7, 31],  since: 28, note: 'Колено: без прыжков, приседания до 90°.' },
+  { id: 'c4',  g: 'f', name: 'Ирина Павлова',     goal: 'Растяжка и осанка',                  pack: [8, 1, 4],    since: 55, note: 'Часто отменяет в последний момент — обсудить правило отмены.' },
+  { id: 'c5',  g: 'm', name: 'Дмитрий Орлов',     goal: 'Набор мышечной массы',               pack: [12, 9, 38],  since: 19, note: '' },
+  { id: 'c6',  g: 'f', name: 'Екатерина Белова',  goal: 'Общий тонус',                        pack: [8, 4, 12],   since: 90, last: 16, att: 55, note: 'Пропала после отпуска — написать.' },
+  { id: 'c7',  g: 'm', name: 'Сергей Миронов',    goal: 'Функциональная подготовка',          pack: [8, 6, 24],   since: 35, note: '' },
+  { id: 'c8',  g: 'f', name: 'Алина Ветрова',     goal: 'Похудение',                          pack: null, joined: false, note: 'Пришла по рекомендации Ольги. Пробная тренировка завтра.' },
+  { id: 'c9',  g: 'f', name: 'Ксения Лебедева',   goal: 'Здоровая спина',                     pack: [8, 3, 15],   since: 47, note: '' },
+  { id: 'c10', g: 'f', name: 'Виктория Захарова', goal: 'Тонус после родов',                  pack: [8, 5, 22],   since: 47, note: 'Тренируется в паре с Ксенией.' },
+].map(c => ({
+  ...c,
+  joined: c.joined !== false,
+  pack: c.pack ? { total: c.pack[0], left: c.pack[1], until: addDays(today0(), c.pack[2]) } : null,
+}));
+const TEMPLATES = [
+  { dow: 1, t: '08:00', type: 'pers', p: ['c2'] },
+  { dow: 1, t: '10:00', type: 'pers', p: ['c3'] },
+  { dow: 1, t: '18:00', type: 'func', p: ['c1', 'c5', 'c7', 'c9', 'c10'] },
+  { dow: 1, t: '19:30', type: 'pers', p: ['c5'] },
+  { dow: 2, t: '09:00', type: 'stretch', p: ['c4'] },
+  { dow: 2, t: '18:30', type: 'pers', p: ['c1'] },
+  { dow: 2, t: '20:00', type: 'split', p: ['c9', 'c10'] },
+  { dow: 3, t: '08:00', type: 'pers', p: ['c2'] },
+  { dow: 3, t: '10:00', type: 'pers', p: ['c3'] },
+  { dow: 3, t: '18:00', type: 'func', p: ['c1', 'c5', 'c7', 'c9', 'c10', 'c2'] },
+  { dow: 3, t: '19:30', type: 'pers', p: ['c5'] },
+  { dow: 4, t: '09:00', type: 'stretch', p: ['c4'] },
+  { dow: 4, t: '12:00', type: 'pers', p: ['c7'] },
+  { dow: 4, t: '18:30', type: 'pers', p: ['c1'] },
+  { dow: 4, t: '20:00', type: 'split', p: ['c9', 'c10'] },
+  { dow: 5, t: '08:00', type: 'pers', p: ['c2'] },
+  { dow: 5, t: '10:00', type: 'pers', p: ['c3'] },
+  { dow: 5, t: '17:00', type: 'func', p: ['c1', 'c5', 'c7', 'c9', 'c10'] },
+  { dow: 5, t: '19:00', type: 'pers', p: ['c9'] },
+  { dow: 6, t: '10:00', type: 'func', p: ['c1', 'c5', 'c7', 'c9', 'c10', 'c2'] },
+  { dow: 6, t: '12:00', type: 'pers', p: ['c3'] },
+  { dow: 6, t: '14:00', type: 'stretch', p: ['c4'] },
+  { dow: 6, t: '16:00', type: 'pers', p: ['c7'] },
+  { dow: 6, t: '18:00', type: 'split', p: ['c9', 'c10'] },
+  { dow: 0, t: '11:00', type: 'stretch', p: ['c10'] },
+  { dow: 0, t: '12:30', type: 'pers', p: ['c1'] },
+];
+const C = id => clients.find(c => c.id === id);
+const short = c => c.name.split(' ')[0];
+const fem = (c, m, f) => (c.g === 'm' ? m : f);
+const initials = name => name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+const hue = id => Math.floor(rnd('h' + id) * 360);
+const av = (c, cls = '') => `<div class="av ${cls}" style="--h:${hue(c.id)}">${initials(c.name)}</div>`;
+const sortedClients = () => clients.slice().sort((a, b) => a.name.localeCompare(b.name, 'ru'));
+
+/* ===== Состояние ===== */
+const state = {
+  tab: 'sched',
+  sel: dkey(today0()),
+  weekStart: dkey(mondayOf(today0())),
+  period: 'month',
+  q: '',
+  settings: { r24: true, r2: true, r30: false, notifyMe: true, waitlist: true, cancelH: 12 },
+  stack: [],
+  form: null, mv: null, invite: null,
+};
+let uid = 0;
+
+/* ===== Тренировки ===== */
+const S = {};
+const startOf = s => { const d = fromKey(s.k); const [h, m] = s.time.split(':').map(Number); d.setHours(h, m, 0, 0); return d; };
+const endOf = s => new Date(startOf(s).getTime() + TYPES[s.type].dur * 60000);
+const isMulti = s => s.people.length > 1 || !!TYPES[s.type].group;
+const allCx = s => s.people.every(p => p.st === 'cancelled');
+const sortDay = k => S[k].sort((a, b) => toMin(a.time) - toMin(b.time));
+
+function mk(k, time, type, people, opts = {}) {
+  const s = { id: `${k}_${time}_${type}`, k, time, type, ...opts, people: [] };
+  const h = (startOf(s) - new Date()) / 36e5, durH = TYPES[type].dur / 60;
+  s.people = people.map(cid => {
+    const r = rnd(s.id + cid);
+    let st;
+    if (!C(cid).joined) st = 'nobot';
+    else if (h <= -durH) {
+      // до запуска бота (прошлый месяц) пропусков больше — так в статистике виден эффект напоминаний
+      const old = k < dkey(new Date(today0().getFullYear(), today0().getMonth(), 1));
+      const [cx, ms] = cid === 'c4' ? [.3, .42] : old ? [.03, .16] : [.015, .06];
+      st = r < cx ? 'cancelled' : r < ms ? 'missed' : 'came';
+    }
+    else if (h <= 0) st = 'confirmed';
+    else if (h < 30) st = r < .72 ? 'confirmed' : 'pending';
+    else st = 'planned';
+    return { cid, st };
+  });
+  return s;
+}
+function day(k) {
+  if (!S[k]) {
+    const dow = fromKey(k).getDay();
+    S[k] = TEMPLATES.filter(t => t.dow === dow && (!t.from || k >= t.from)).map(t => mk(k, t.t, t.type, t.p));
+    if (k === dkey(addDays(today0(), 1))) S[k].push(mk(k, '15:00', 'pers', ['c8'], { trial: true }));
+    sortDay(k);
+  }
+  return S[k];
+}
+const findSes = id => { for (const k in S) { const s = S[k].find(x => x.id === id); if (s) return s; } return null; };
+function seedDemo() {
+  const now = new Date();
+  const up = [0, 1].flatMap(i => day(dkey(addDays(today0(), i))))
+    .filter(s => startOf(s) > now && startOf(s) - now < 30 * 36e5);
+  const ir = up.find(s => s.people.some(p => p.cid === 'c4'));
+  if (ir) ir.people.find(p => p.cid === 'c4').st = 'cancelled';
+  const pend = up.find(s => s !== ir && s.people.length === 1 && s.people[0].st !== 'nobot');
+  if (pend) pend.people[0].st = 'pending';
+}
+
+const ST = {
+  confirmed: ['Подтверждено', 'ok'],
+  pending: ['Ждём ответа', 'warn'],
+  cancelled: ['Отменено', 'bad'],
+  came: ['Посещено', 'ok'],
+  missed: ['Пропуск', 'bad'],
+  planned: ['Запланировано', 'muted'],
+  nobot: ['Нет в боте', 'warn'],
+};
+function sesPill(s) {
+  const now = new Date();
+  if (startOf(s) <= now && now < endOf(s) && !allCx(s)) return ['Идёт', 'live'];
+  if (!isMulti(s)) return ST[s.people[0].st];
+  const n = s.people.length;
+  if (endOf(s) <= now) { const c = s.people.filter(p => p.st === 'came').length; return [`${c}/${n} пришли`, c === n ? 'ok' : 'muted']; }
+  if (s.people.every(p => p.st === 'planned')) return [`${n} записаны`, 'muted'];
+  const act = s.people.filter(p => p.st !== 'cancelled'), c = act.filter(p => p.st === 'confirmed').length;
+  return [`${c}/${act.length} подтв.`, c === act.length ? 'ok' : 'warn'];
+}
+const whoOf = s => {
+  const T = TYPES[s.type];
+  if (T.group) return `${T.name} · группа`;
+  if (s.people.length > 1) return s.people.map(p => short(C(p.cid))).join(' и ');
+  return C(s.people[0].cid).name;
+};
+
+/* ===== Статистика клиента ===== */
+function cstats(c) {
+  const now = new Date(), t0 = today0();
+  let came = 0, missed = 0, cx = 0, last = null;
+  for (let i = 30; i >= 0; i--) {
+    for (const s of day(dkey(addDays(t0, -i)))) {
+      if (endOf(s) > now) continue;
+      const p = s.people.find(p => p.cid === c.id);
+      if (!p) continue;
+      if (p.st === 'came') { came++; last = fromKey(s.k); }
+      else if (p.st === 'missed') missed++;
+      else if (p.st === 'cancelled') cx++;
+    }
+  }
+  const tot = came + missed + cx;
+  return {
+    came, missed, cancels: cx,
+    att: tot ? Math.round(came * 100 / tot) : (c.att != null ? c.att : null),
+    lastDays: last ? Math.round((t0 - last) / 864e5) : (c.last != null ? c.last : null),
+  };
+}
+const lastLabel = d => d === 0 ? 'сегодня' : d === 1 ? 'вчера' : `${d} дн. назад`;
+function packLine(c) {
+  if (!c.joined) return `${fem(c, 'Ещё не подключён', 'Ещё не подключена')} к боту`;
+  const st = cstats(c);
+  const p = c.pack ? `Абонемент ${c.pack.left} из ${c.pack.total}` : 'Без абонемента';
+  return st.lastDays == null ? p : `${p} · ${fem(c, 'был', 'была')} ${lastLabel(st.lastDays)}`;
+}
+
+/* ===== Общие куски разметки ===== */
+const sec = (t, right = '') => `<div class="sec-t"><span>${t}</span>${right}</div>`;
+const head = () => inTG ? '' : `<button class="back" data-act="back">${ic('chevL', 22)}<span>Назад</span></button>`;
+const me = () => (inTG && tg.initDataUnsafe && tg.initDataUnsafe.user) || null;
+const trainerName = () => (me() && me().first_name) || CONFIG.trainerName;
+function avatarMe(cls = 'me') {
+  const u = me();
+  if (u && u.photo_url) return `<img class="av ${cls}" src="${esc(u.photo_url)}" alt="">`;
+  return `<div class="av ${cls}" style="--h:18">${initials(trainerName())}</div>`;
+}
+
+/* ===== Экран: расписание ===== */
+function sesRow(s) {
+  const T = TYPES[s.type], now = new Date();
+  const past = endOf(s) <= now, cx = allCx(s);
+  const [pt, pc] = sesPill(s);
+  let sub = isMulti(s) ? (T.group ? `${s.people.length} из ${T.cap} мест` : `${T.name} · вдвоём`) : `${s.trial ? 'Пробная · ' : ''}${T.name}`;
+  if (!isMulti(s) && s.people[0].st === 'nobot') sub += ' · не в боте';
+  let extra = '';
+  if (cx && !past && state.settings.waitlist) extra = `<div class="free">${ic('repeat', 13)} Окно предложено листу ожидания</div>`;
+  if (T.group && !past) extra = `<div class="faces">${s.people.slice(0, 6).map(p => av(C(p.cid), 'xs')).join('')}</div>`;
+  return `<button class="ses ${past ? 'past' : ''} ${cx ? 'cx' : ''}" data-act="open" data-p="session" data-id="${s.id}" style="--c:${T.color}">
+    <div class="tm"><b>${s.time}</b><small>${T.dur} мин</small></div><div class="bar"></div>
+    <div class="mid"><div class="nm">${esc(whoOf(s))}</div><div class="sub">${sub}</div>${extra}</div>
+    <span class="pill ${pc}">${pt}</span></button>`;
+}
+function rangeLabel(a, b) {
+  return a.getMonth() === b.getMonth() ? `${a.getDate()}–${b.getDate()} ${MG[b.getMonth()]}` : `${a.getDate()} ${MG[a.getMonth()]} – ${b.getDate()} ${MG[b.getMonth()]}`;
+}
+function renderSched() {
+  const t0 = today0(), tk = dkey(t0), ws = fromKey(state.weekStart), now = new Date();
+  const hr = now.getHours();
+  const greet = hr < 5 ? 'Доброй ночи' : hr < 12 ? 'Доброе утро' : hr < 18 ? 'Добрый день' : 'Добрый вечер';
+  let h = `<div class="top"><div><div class="hello">${greet}, ${esc(trainerName())}</div><div class="title">Расписание</div></div><button data-act="tab" data-tab="settings" aria-label="Профиль">${avatarMe()}</button></div>`;
+  const isCur = state.weekStart === dkey(mondayOf(t0));
+  h += `<div class="wnav"><button class="icon-btn" data-act="week" data-d="-1" aria-label="Предыдущая неделя">${ic('chevL', 18)}</button><span>${rangeLabel(ws, addDays(ws, 6))}</span>${isCur ? '' : '<button class="link" data-act="today">Сегодня</button>'}<button class="icon-btn" data-act="week" data-d="1" aria-label="Следующая неделя">${ic('chevR', 18)}</button></div>`;
+  h += '<div class="week">';
+  for (let i = 0; i < 7; i++) {
+    const d = addDays(ws, i), k = dkey(d), n = day(k).length;
+    h += `<button class="wd ${k === state.sel ? 'sel' : ''} ${k === tk ? 'today' : ''}" data-act="day" data-k="${k}"><small>${WD[d.getDay()]}</small><b>${d.getDate()}</b><i style="opacity:${n ? 1 : 0}"></i></button>`;
+  }
+  h += '</div>';
+
+  const list = day(state.sel), selD = fromKey(state.sel);
+  const isPastDay = state.sel < tk || (state.sel === tk && list.length > 0 && list.every(s => endOf(s) <= now));
+  if (state.sel === tk) {
+    const pend = [0, 1].flatMap(i => day(dkey(addDays(t0, i)))).filter(s => startOf(s) > now)
+      .flatMap(s => s.people.filter(p => p.st === 'pending').map(p => ({ s, c: C(p.cid) })));
+    if (pend.length) {
+      const f = pend[0];
+      const more = pend.length > 1 ? ` и ещё ${pend.length - 1}` : '';
+      h += `<button class="alert" data-act="open" data-p="session" data-id="${f.s.id}">${ic('bell')}<div class="mid"><div class="nm">${esc(short(f.c))}${more} — нет ответа</div><div class="sub">На напоминание о тренировке ${when(startOf(f.s))}</div></div>${ic('chevR', 18)}</button>`;
+    }
+  }
+
+  const ppl = list.flatMap(s => s.people);
+  const cnt = st => ppl.filter(p => st.includes(p.st)).length;
+  const income = list.reduce((a, s) => a + s.people.filter(p => !['cancelled', 'missed', 'nobot'].includes(p.st)).length * TYPES[s.type].price, 0);
+  const held = list.filter(s => !allCx(s)).length;
+  const cells = isPastDay
+    ? [[held, 'тренировок'], [cnt(['came']), 'посещено'], [cnt(['missed']), 'пропусков'], [cnt(['cancelled']), 'отмен']]
+    : [[held, 'тренировок'], [cnt(['confirmed', 'came']), 'подтвердили'], [cnt(['pending']), 'ждём ответа'], [cnt(['cancelled']), 'отмен']];
+  if (list.length) {
+    h += `<div class="card"><div class="sum-h">${state.sel === tk ? 'Сегодня, ' : ''}${state.sel === tk ? fmtDay(selD) : cap1(fmtDay(selD))}</div><div class="sum">${cells.map(([n, l]) => `<div><b>${n}</b><small>${l}</small></div>`).join('')}</div>
+      <div class="sum-foot"><span>${isPastDay ? 'Заработано за день' : 'Ожидаемый доход'}</span><b>${rub(income)}</b></div></div>`;
+  }
+  h += sec(list.length ? `${list.length} ${plural(list.length, 'тренировка', 'тренировки', 'тренировок')}` : cap1(fmtDay(selD)));
+  if (!list.length) {
+    h += `<div class="card empty"><b>Свободный день</b>Тренировок нет. Можно отдохнуть или добавить занятие.<button class="btn tint" data-act="new">${ic('plus', 18)} Добавить тренировку</button></div>`;
+  } else {
+    let nowShown = state.sel !== tk;
+    for (const s of list) {
+      if (!nowShown && startOf(s) > now) { h += `<div class="now">${pad(now.getHours())}:${pad(now.getMinutes())}</div>`; nowShown = true; }
+      h += sesRow(s);
+    }
+  }
+  return h;
+}
+
+/* ===== Экран: клиенты ===== */
+function clientList() {
+  const q = state.q.trim().toLowerCase();
+  const list = sortedClients().filter(c => !q || c.name.toLowerCase().includes(q));
+  if (!list.length) return `<div class="empty">Никого не нашли</div>`;
+  return list.map(c => {
+    let pill = '';
+    if (!c.joined) pill = '<span class="pill warn">Нет в боте</span>';
+    else if (c.pack && c.pack.left <= 2) pill = `<span class="pill warn">${c.pack.left} ${plural(c.pack.left, 'занятие', 'занятия', 'занятий')}</span>`;
+    return `<button class="row" data-act="open" data-p="client" data-id="${c.id}">${av(c)}<div class="mid"><div class="nm">${esc(c.name)}</div><div class="sub">${packLine(c)}</div></div>${pill}<span class="chev">${ic('chevR', 18)}</span></button>`;
+  }).join('');
+}
+function renderClients() {
+  let h = `<div class="top"><div><div class="hello">${clients.length} ${plural(clients.length, 'клиент', 'клиента', 'клиентов')}</div><div class="title">Клиенты</div></div></div>`;
+  h += `<div style="position:relative;margin-bottom:10px"><span style="position:absolute;left:12px;top:12px;color:var(--hint)">${ic('search', 18)}</span><input class="inp" style="padding-left:38px" data-in="q" placeholder="Поиск по имени" value="${esc(state.q)}"></div>`;
+  h += `<button class="card row" style="padding:12px 16px" data-act="invite">${'<div class="att-ic" style="background:var(--brand-bg);color:var(--brand)">' + ic('userPlus', 18) + '</div>'}<div class="mid"><div class="nm">Пригласить клиента</div><div class="sub">Ссылка на бота — клиент сам появится в списке</div></div><span class="chev">${ic('chevR', 18)}</span></button>`;
+  h += `<div class="card list" id="clist">${clientList()}</div>`;
+  return h;
+}
+
+/* ===== Экран: статистика ===== */
+function periodRange(p) {
+  const now = new Date(), t0 = today0();
+  if (p === 'week') { const m = mondayOf(t0); return [m, now, addDays(m, -7), new Date(now.getTime() - 7 * 864e5), addDays(m, 7)]; }
+  const a = new Date(t0.getFullYear(), t0.getMonth(), 1);
+  const pa = new Date(t0.getFullYear(), t0.getMonth() - 1, 1);
+  const dim = new Date(pa.getFullYear(), pa.getMonth() + 1, 0).getDate();
+  const pb = new Date(pa.getFullYear(), pa.getMonth(), Math.min(now.getDate(), dim), now.getHours(), now.getMinutes());
+  return [a, now, pa, pb, new Date(t0.getFullYear(), t0.getMonth() + 1, 1)];
+}
+function calc(from, to) {
+  let sessions = 0, came = 0, missed = 0, cancelled = 0, income = 0;
+  const byType = {};
+  for (let d = new Date(from); d <= to; d = addDays(d, 1)) {
+    for (const s of day(dkey(d))) {
+      if (endOf(s) > to) continue;
+      const cm = s.people.filter(p => p.st === 'came').length;
+      if (cm) sessions++;
+      came += cm;
+      missed += s.people.filter(p => p.st === 'missed').length;
+      cancelled += s.people.filter(p => p.st === 'cancelled').length;
+      const inc = cm * TYPES[s.type].price;
+      income += inc;
+      byType[s.type] = (byType[s.type] || 0) + inc;
+    }
+  }
+  const tot = came + missed + cancelled;
+  return { sessions, came, missed, cancelled, income, byType, att: tot ? Math.round(came * 100 / tot) : 0 };
+}
+function forecast(to) {
+  const now = new Date();
+  let sum = 0;
+  for (let d = today0(); d < to; d = addDays(d, 1)) {
+    for (const s of day(dkey(d))) {
+      if (startOf(s) <= now) continue;
+      sum += s.people.filter(p => !['cancelled', 'nobot'].includes(p.st)).length * TYPES[s.type].price;
+    }
+  }
+  return sum;
+}
+const dPct = (a, b, invert) => {
+  if (!b) return '<span class="delta flat">—</span>';
+  const v = Math.round((a - b) * 100 / b);
+  if (v === 0) return '<span class="delta flat">без изменений</span>';
+  const good = invert ? v < 0 : v > 0;
+  return `<span class="delta ${good ? 'up' : 'down'}">${v > 0 ? '↑' : '↓'} ${Math.abs(v)}%</span>`;
+};
+const dAbs = (a, b, unit, invert) => {
+  const v = a - b;
+  if (v === 0) return '<span class="delta flat">без изменений</span>';
+  const good = invert ? v < 0 : v > 0;
+  return `<span class="delta ${good ? 'up' : 'down'}">${v > 0 ? '↑' : '↓'} ${Math.abs(v)}${unit}</span>`;
+};
+function attention() {
+  const out = [];
+  for (const c of sortedClients()) {
+    const st = cstats(c);
+    if (!c.joined) out.push({ c, icn: 'send', cls: 'warn', text: `${fem(c, 'Не подключён', 'Не подключена')} к боту`, act: 'invite', label: 'Ссылка' });
+    if (c.pack && c.pack.left <= 2) out.push({ c, icn: 'card', cls: 'warn', text: `${c.pack.left} ${plural(c.pack.left, 'занятие', 'занятия', 'занятий')} в абонементе`, act: 'nudgeRenew', label: 'Напомнить' });
+    if (st.lastDays != null && st.lastDays >= 10) out.push({ c, icn: 'clock', cls: 'bad', text: `Не ${fem(c, 'был', 'была')} ${st.lastDays} ${plural(st.lastDays, 'день', 'дня', 'дней')}`, act: 'nudgeBack', label: 'Позвать' });
+    if (st.cancels >= 3 && st.att < 80) out.push({ c, icn: 'x', cls: 'bad', text: `${st.cancels} ${plural(st.cancels, 'отмена', 'отмены', 'отмен')} за месяц`, act: 'openClient', label: 'Открыть' });
+  }
+  return out;
+}
+function renderStats() {
+  const p = state.period, t0 = today0();
+  const [a, b, pa, pb, end] = periodRange(p);
+  const cur = calc(a, b), prev = calc(pa, pb);
+  let h = `<div class="top"><div><div class="hello">${p === 'week' ? rangeLabel(mondayOf(t0), addDays(mondayOf(t0), 6)) : MN[t0.getMonth()] + ' ' + t0.getFullYear()}</div><div class="title">Статистика</div></div></div>`;
+  h += `<div class="seg"><button class="${p === 'week' ? 'on' : ''}" data-act="period" data-v="week">Неделя</button><button class="${p === 'month' ? 'on' : ''}" data-act="period" data-v="month">Месяц</button></div>`;
+  h += '<div class="metrics">'
+    + `<div class="metric"><small>Тренировок</small><b>${cur.sessions}</b>${dPct(cur.sessions, prev.sessions)}</div>`
+    + `<div class="metric"><small>Посещаемость</small><b>${cur.att}%</b>${dAbs(cur.att, prev.att, ' п.п.')}</div>`
+    + `<div class="metric"><small>Отмены</small><b>${cur.cancelled}</b>${dAbs(cur.cancelled, prev.cancelled, '', true)}</div>`
+    + `<div class="metric"><small>Доход</small><b>${rub(cur.income)}</b>${dPct(cur.income, prev.income)}</div>`
+    + '</div>';
+  h += `<p class="hint">Сравнение с тем же периодом ${p === 'week' ? 'прошлой недели' : MG[pa.getMonth()]}</p>`;
+
+  h += sec('Ожидается ещё') + `<div class="card"><div class="big-num">${rub(forecast(end))}</div><div class="sub">по текущим записям до конца ${p === 'week' ? 'недели' : 'месяца'}</div></div>`;
+
+  const dows = [1, 2, 3, 4, 5, 6, 0], load = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 }, now = new Date();
+  for (let i = 27; i >= 0; i--) {
+    const d = addDays(t0, -i);
+    for (const s of day(dkey(d))) if (endOf(s) <= now) load[d.getDay()] += s.people.filter(x => x.st === 'came').length;
+  }
+  const mx = Math.max(1, ...Object.values(load));
+  h += sec('Загрузка по дням · 4 недели') + `<div class="card"><div class="bars">${dows.map(w => `<div><span>${load[w]}</span><i style="height:${Math.round(load[w] / mx * 100)}%;opacity:${load[w] === mx ? 1 : .55}"></i><small>${WD[w]}</small></div>`).join('')}</div><p class="hint" style="margin:10px 0 0">Визиты клиентов по дням недели</p></div>`;
+
+  const tmx = Math.max(1, ...Object.values(cur.byType));
+  h += sec('Доход по видам') + `<div class="card">${Object.entries(TYPES).map(([k, T]) => `<div class="hbar" style="--c:${T.color}"><div class="l"><span>${T.name}</span><b>${rub(cur.byType[k] || 0)}</b></div><div class="track"><i style="width:${Math.round((cur.byType[k] || 0) / tmx * 100)}%"></i></div></div>`).join('')}</div>`;
+
+  const att = attention();
+  h += sec('Требуют внимания', `<span>${att.length}</span>`) + `<div class="card list">${att.map(x => `<div class="row"><button class="rowmain" data-act="open" data-p="client" data-id="${x.c.id}"><div class="att-ic ${x.cls}">${ic(x.icn, 17)}</div><div class="mid"><div class="nm">${esc(x.c.name)}</div><div class="sub">${x.text}</div></div></button><button class="btn sm tint" data-act="${x.act}" data-id="${x.c.id}">${x.label}</button></div>`).join('')}</div>`;
+  return h;
+}
+
+/* ===== Экран: настройки ===== */
+function swRow(key, title, sub = '') {
+  return `<div class="field"><div><div>${title}</div>${sub ? `<div class="sub">${sub}</div>` : ''}</div><button class="sw ${state.settings[key] ? 'on' : ''}" data-act="toggle" data-k="${key}" aria-label="${title}"></button></div>`;
+}
+function renderSettings() {
+  const st = state.settings, u = me();
+  let h = `<div class="top"><div><div class="title">Настройки</div></div></div>`;
+  h += `<div class="card row" style="padding:14px 16px">${avatarMe()}<div class="mid"><div class="nm">${esc(u ? [u.first_name, u.last_name].filter(Boolean).join(' ') : CONFIG.trainerName)}</div><div class="sub">${u && u.username ? '@' + esc(u.username) + ' · ' : ''}Тренер · ${CONFIG.place}</div></div></div>`;
+  h += sec('Напоминания клиентам') + `<div class="card list">${swRow('r24', 'За 24 часа')}${swRow('r2', 'За 2 часа')}${swRow('r30', 'За 30 минут')}</div>`;
+  h += sec('Контроль') + `<div class="card list">${swRow('notifyMe', 'Сообщать мне о молчащих', 'Если клиент не ответил за 3 часа до тренировки')}${swRow('waitlist', 'Лист ожидания', 'Освободившееся окно сразу предлагается другим')}</div>`;
+  h += sec('Бесплатная отмена') + `<div class="seg">${[6, 12, 24].map(n => `<button class="${st.cancelH === n ? 'on' : ''}" data-act="cancelH" data-v="${n}">за ${n} ч</button>`).join('')}</div><p class="hint" style="margin-top:-4px">Если клиент отменяет позже — занятие списывается с абонемента.</p>`;
+
+  const remind = st.r24 ? 'Завтра' : 'Сегодня';
+  h += sec('Так клиент видит напоминание') + `<div class="chat"><div class="bubble"><div class="from">Бот тренера</div><b>Напоминание о тренировке</b><br>${remind} в 19:00 — персональная, 60 мин<br>${CONFIG.place}<br><br>Отменить без списания можно не позже чем за ${st.cancelH} ч.<span class="tm2">18:00</span></div>
+    <div class="kb"><button data-act="demoBtn" data-v="ok">Приду</button><button data-act="demoBtn" data-v="no">Не смогу</button><button class="wide" data-act="demoBtn" data-v="move">Перенести</button></div></div>`;
+
+  h += sec('Виды тренировок') + `<div class="card list">${Object.values(TYPES).map(T => `<div class="row"><span class="bar" style="--c:${T.color};height:30px"></span><div class="mid"><div class="nm">${T.name}</div><div class="sub">${T.dur} мин · ${T.cap > 1 ? `до ${T.cap} человек` : 'индивидуально'}</div></div><b>${rub(T.price)}</b></div>`).join('')}</div>`;
+  h += sec('Абонементы') + `<div class="card list">${PACKS.map(p => `<div class="row"><div class="mid"><div class="nm">${p.n === 1 ? 'Разовое занятие' : `${p.n} занятий`}</div><div class="sub">действует ${p.days} дней</div></div><b>${rub(p.price)}</b></div>`).join('')}</div>`;
+  h += `<p class="foot">Прототип · все данные демонстрационные</p><button class="btn sec" data-act="reset">Сбросить демо</button>`;
+  return h;
+}
+
+/* ===== Страница: тренировка ===== */
+function timeline(s) {
+  const st = startOf(s), now = new Date(), out = [];
+  const multi = isMulti(s);
+  const p0 = s.people[0], c0 = C(p0.cid);
+  if (!multi && p0.st === 'nobot') return [['t-warn', `${short(c0)} ещё не ${fem(c0, 'подключился', 'подключилась')} к боту — напоминания не отправляются`]];
+  const rem = [['r24', 24, '24 ч'], ['r2', 2, '2 ч'], ['r30', .5, '30 мин']];
+  for (const [key, hrs, label] of rem) {
+    if (!state.settings[key]) continue;
+    const t = new Date(st - hrs * 36e5);
+    out.push(t <= now ? ['t-done', `Напоминание за ${label} отправлено ${when(t)}`] : ['t-next', `Напоминание за ${label} уйдёт ${when(t)}`]);
+  }
+  if (multi) {
+    const c = s.people.filter(p => p.st === 'confirmed').length, pe = s.people.filter(p => p.st === 'pending').length, x = s.people.filter(p => p.st === 'cancelled').length;
+    if (c) out.push(['t-ok', `Подтвердили: ${c}`]);
+    if (pe) out.push(['t-warn', `Ещё не ответили: ${pe}`]);
+    if (x) out.push(['t-bad', `Отменили: ${x}`]);
+    return out;
+  }
+  const n = short(c0);
+  if (p0.st === 'confirmed') out.push(['t-ok', `${n} ${fem(c0, 'подтвердил', 'подтвердила')} участие`]);
+  if (p0.st === 'pending') {
+    out.push(['t-warn', 'Ответа пока нет']);
+    if (state.settings.notifyMe) {
+      const t3 = new Date(st - 3 * 36e5);
+      out.push(t3 <= now ? ['t-warn', `Вам пришло уведомление: ${n} не ${fem(c0, 'ответил', 'ответила')}`] : ['t-next', `Если ответа не будет — вам придёт уведомление ${when(t3)}`]);
+    }
+  }
+  if (p0.st === 'cancelled') {
+    out.push(['t-bad', `${n} ${fem(c0, 'отменил', 'отменила')} запись`]);
+    if (state.settings.waitlist) out.push(['t-ok', 'Окно предложено листу ожидания: Алина В., Ксения Л.']);
+  }
+  return out;
+}
+function pSession(id) {
+  const s = findSes(id);
+  if (!s) return head() + '<div class="empty"><b>Тренировка не найдена</b></div>';
+  const T = TYPES[s.type], now = new Date(), d = fromKey(s.k);
+  const started = startOf(s) <= now, past = endOf(s) <= now, cx = allCx(s), multi = isMulti(s);
+  let h = head() + `<div class="ptitle">${esc(whoOf(s))}</div>`;
+  h += `<div class="card hero" style="--c:${T.color}"><div class="tag">${T.name}${T.group ? ' · группа' : ''}${s.trial ? ' · пробная' : ''}</div><div class="big">${s.time}–${fromMin(toMin(s.time) + T.dur)}</div><div class="sub" style="font-size:15px">${cap1(fmtDay(d))}</div><div class="meta">${ic('pin', 15)} ${CONFIG.place} · ${rub(T.price)}${multi ? ' с человека' : ''}</div></div>`;
+  h += sec(multi ? `Участники · ${s.people.length} из ${T.cap}` : 'Клиент') + '<div class="card list">';
+  s.people.forEach((p, i) => {
+    const c = C(p.cid), [t, cl] = ST[p.st];
+    let acts = '';
+    if (p.st === 'nobot') acts = `<button class="btn sm tint" data-act="invite" data-id="${c.id}">${ic('send', 15)} Отправить ссылку на бота</button>`;
+    else if (started && p.st !== 'cancelled') acts = `<button class="btn sm ${p.st === 'came' ? 'on-ok' : 'ghost'}" data-act="mark" data-id="${s.id}" data-c="${c.id}" data-v="came">${ic('check', 15)} ${fem(c, 'Пришёл', 'Пришла')}</button><button class="btn sm ${p.st === 'missed' ? 'on-bad' : 'ghost'}" data-act="mark" data-id="${s.id}" data-c="${c.id}" data-v="missed">${ic('x', 15)} Пропуск</button>`;
+    else if (!started && p.st === 'pending') acts = `<button class="btn sm tint" data-act="remind" data-id="${s.id}" data-c="${c.id}">${ic('bell', 15)} Напомнить ещё раз</button>`;
+    h += `<div class="row ${acts ? 'has-acts' : ''}"><button class="rowmain" data-act="open" data-p="client" data-id="${c.id}">${av(c)}<div class="mid"><div class="nm">${esc(c.name)}</div><div class="sub">${c.pack ? `Абонемент: ${c.pack.left} из ${c.pack.total}` : 'Без абонемента'}</div></div></button><span class="pill ${cl}">${t}</span></div>`;
+    if (acts) h += `<div class="acts" style="${i < s.people.length - 1 ? 'border-bottom:.5px solid var(--sep)' : ''}">${acts}</div>`;
+  });
+  h += '</div>';
+  if (!past) {
+    const tl = timeline(s);
+    if (tl.length) h += sec('Напоминания') + `<div class="card"><div class="tl">${tl.map(([c, t]) => `<p class="${c}">${t}</p>`).join('')}</div></div>`;
+  }
+  if (!started && !cx) {
+    h += `<button class="btn sec" data-act="move" data-id="${s.id}">${ic('clock', 18)} Перенести</button>`;
+    h += `<button class="btn danger" data-act="cancelSes" data-id="${s.id}">Отменить тренировку</button>`;
+  }
+  return h;
+}
+
+/* ===== Страница: перенос ===== */
+const overlaps = (s, time, dur) => { const a = toMin(s.time), b = a + TYPES[s.type].dur, x = toMin(time); return x < b && a < x + dur; };
+function pMove(id) {
+  const s = findSes(id), mv = state.mv, T = TYPES[s.type], now = new Date();
+  let h = head() + `<div class="ptitle">Перенос</div><p class="lead">${esc(whoOf(s))} · сейчас ${fmtShort(fromKey(s.k))}, ${s.time}</p>`;
+  h += sec('День') + '<div class="chips scroll">';
+  for (let i = 0; i < 14; i++) {
+    const d = addDays(today0(), i), k = dkey(d);
+    h += `<button class="chip ${mv.k === k ? 'on' : ''}" data-act="mvday" data-k="${k}">${i === 0 ? 'Сегодня' : i === 1 ? 'Завтра' : WD[d.getDay()]}<small>${d.getDate()} ${MG[d.getMonth()].slice(0, 3)}</small></button>`;
+  }
+  h += '</div>' + sec('Свободное время') + '<div class="chips">';
+  for (let m = 7 * 60; m <= 21 * 60; m += 30) {
+    const t = fromMin(m);
+    const busy = day(mv.k).some(x => x !== s && !allCx(x) && overlaps(x, t, T.dur));
+    const gone = mv.k === dkey(today0()) && m <= now.getHours() * 60 + now.getMinutes();
+    h += `<button class="chip ${busy || gone ? 'off' : ''} ${mv.time === t ? 'on' : ''}" data-act="mvtime" data-v="${t}">${t}</button>`;
+  }
+  h += `</div><div class="err" id="mverr"></div><button class="btn" data-act="mvsave" data-id="${id}">Перенести и спросить клиента</button><p class="hint">Клиенту придёт сообщение с новым временем и кнопками «Подходит / Не подходит».</p>`;
+  return h;
+}
+
+/* ===== Страница: новая тренировка ===== */
+function pNew() {
+  const f = state.form, T = TYPES[f.type], multi = T.cap > 1;
+  let h = head() + '<div class="ptitle">Новая тренировка</div>';
+  h += sec('Вид') + `<div class="chips">${Object.entries(TYPES).map(([k, t]) => `<button class="chip ${f.type === k ? 'on' : ''}" data-act="ftype" data-v="${k}">${t.name}</button>`).join('')}</div>`;
+  h += sec(multi ? `Участники · до ${T.cap}` : 'Клиент', multi ? `<span>${f.people.length}/${T.cap}</span>` : '') + `<div class="chips">${sortedClients().map(c => `<button class="chip ${f.people.includes(c.id) ? 'on' : ''}" data-act="fperson" data-v="${c.id}">${esc(short(c))}</button>`).join('')}</div>`;
+  h += sec('Когда') + `<div class="card list"><label class="field"><span>Дата</span><input type="date" data-in="fdate" value="${f.k}" min="${dkey(today0())}"></label><label class="field"><span>Время</span><input type="time" data-in="ftime" value="${f.time}" step="900"></label><div class="field"><span>${ic('repeat', 17)} Каждую неделю</span><button class="sw ${f.repeat ? 'on' : ''}" data-act="fset" data-k="repeat" aria-label="Повторять каждую неделю"></button></div></div>`;
+  h += `<div class="card list"><div class="field"><div><div>Попросить подтвердить</div><div class="sub">Клиент получит кнопки «Приду / Не смогу»</div></div><button class="sw ${f.ask ? 'on' : ''}" data-act="fset" data-k="ask" aria-label="Попросить подтвердить"></button></div></div>`;
+  h += `<div class="err" id="ferr"></div><button class="btn" data-act="fsave">Добавить тренировку</button>`;
+  return h;
+}
+
+/* ===== Страница: клиент ===== */
+function pClient(id) {
+  const c = C(id), st = cstats(c), now = new Date(), t0 = today0();
+  let h = head() + `<div class="prof">${av(c, 'lg')}<div class="nm">${esc(c.name)}</div><div class="sub">${esc(c.goal)}</div>${c.joined ? `<span class="pill ok">${ic('check', 13)} В боте с ${fmtShort(addDays(t0, -c.since)).split(', ')[1]}</span>` : `<span class="pill warn">${fem(c, 'Не подключён', 'Не подключена')} к боту</span>`}</div>`;
+  if (!c.joined) h += `<div class="card"><div style="margin-bottom:10px">Пока ${short(c)} не ${fem(c, 'нажал', 'нажала')} «Запустить» в боте, напоминания ${fem(c, 'ему', 'ей')} не приходят.</div><button class="btn" style="margin:0" data-act="invite" data-id="${c.id}">${ic('send', 18)} Отправить ссылку на бота</button></div>`;
+  else h += `<div class="card trio"><div><b>${st.att != null ? st.att + '%' : '—'}</b><small>посещаемость</small></div><div><b>${st.came}</b><small>визитов за месяц</small></div><div><b>${st.cancels}</b><small>отмен</small></div></div>`;
+
+  h += sec('Абонемент');
+  if (c.pack) {
+    const pc = c.pack, low = pc.left <= 2;
+    h += `<div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:17px">${pc.total} ${plural(pc.total, 'занятие', 'занятия', 'занятий')}</b><span class="sub">до ${pc.until.getDate()} ${MG[pc.until.getMonth()]}</span></div><div class="prog ${low ? 'low' : ''}"><i style="width:${Math.round(pc.left / pc.total * 100)}%"></i></div><div class="sub">Осталось ${pc.left} из ${pc.total}${low ? ' — пора продлевать' : ''}</div><button class="btn ${low ? '' : 'tint'}" data-act="renew" data-id="${c.id}">${ic('card', 18)} Продлить абонемент</button></div>`;
+  } else {
+    h += `<div class="card"><div class="sub" style="margin-bottom:2px">Абонемента пока нет</div><button class="btn tint" data-act="renew" data-id="${c.id}">${ic('card', 18)} Оформить абонемент</button></div>`;
+  }
+
+  const next = [];
+  for (let i = 0; i < 14 && next.length < 3; i++) for (const s of day(dkey(addDays(t0, i)))) if (startOf(s) > now && s.people.some(p => p.cid === id) && next.length < 3) next.push(s);
+  h += sec('Ближайшие тренировки') + `<div class="card list">${next.length ? next.map(s => { const p = s.people.find(p => p.cid === id), [t, cl] = ST[p.st]; return `<button class="row" data-act="open" data-p="session" data-id="${s.id}"><div class="mid"><div class="nm">${cap1(fmtShort(fromKey(s.k)))}, ${s.time}</div><div class="sub">${TYPES[s.type].name}</div></div><span class="pill ${cl}">${t}</span></button>`; }).join('') : '<div class="row"><span class="sub">Нет записей на ближайшие две недели</span></div>'}</div>`;
+
+  const hist = [];
+  for (let i = 0; i <= 30 && hist.length < 5; i++) { const ds = day(dkey(addDays(t0, -i))).slice().reverse(); for (const s of ds) if (endOf(s) <= now && s.people.some(p => p.cid === id) && hist.length < 5) hist.push(s); }
+  if (hist.length) h += sec('История') + `<div class="card list">${hist.map(s => { const p = s.people.find(p => p.cid === id), [t, cl] = ST[p.st]; return `<div class="row"><div class="mid"><div class="nm">${cap1(fmtShort(fromKey(s.k)))}, ${s.time}</div><div class="sub">${TYPES[s.type].name}</div></div><span class="pill ${cl}">${t}</span></div>`; }).join('')}</div>`;
+
+  h += sec('Заметки тренера') + `<div class="card" style="padding:0 16px"><textarea class="txt" data-in="note" data-id="${c.id}" placeholder="Травмы, цели, что учесть на тренировке">${esc(c.note)}</textarea></div><p class="hint">Видны только вам.</p>`;
+  return h;
+}
+
+/* ===== Страница: абонемент ===== */
+function pRenew(id) {
+  const c = C(id);
+  let h = head() + `<div class="ptitle">Абонемент</div><p class="lead">${esc(c.name)}</p>`;
+  h += `<div class="card list">${PACKS.map((p, i) => `<button class="row" data-act="pack" data-id="${id}" data-i="${i}"><div class="mid"><div class="nm">${p.n === 1 ? 'Разовое занятие' : `${p.n} занятий`}</div><div class="sub">действует ${p.days} дней · ${rub(Math.round(p.price / p.n))} за занятие</div></div><b>${rub(p.price)}</b><span class="chev">${ic('chevR', 18)}</span></button>`).join('')}</div>`;
+  h += `<p class="hint">Клиент получит счёт прямо в чате с ботом и оплатит картой — абонемент активируется автоматически.</p>`;
+  return h;
+}
+
+/* ===== Страница: приглашение ===== */
+const inviteLink = () => `https://t.me/${CONFIG.botUsername}?start=${state.invite.code}`;
+function pInvite() {
+  const iv = state.invite;
+  let h = head() + '<div class="ptitle">Пригласить клиента</div>';
+  h += `<div class="card steps"><div class="step">Отправьте клиенту ссылку на бота</div><div class="step">Клиент нажимает «Запустить»</div><div class="step">Он появляется у вас в списке и начинает получать напоминания</div></div>`;
+  h += sec('Имя клиента') + `<input class="inp" data-in="iname" placeholder="Например, Алина" value="${esc(iv.name)}">`;
+  h += sec('Персональная ссылка') + `<div class="card"><div class="linkbox" id="ilink">${esc(inviteLink())}</div></div>`;
+  h += `<button class="btn" data-act="share">${ic('send', 18)} Отправить в Telegram</button><button class="btn sec" data-act="copy">${ic('copy', 18)} Скопировать ссылку</button>`;
+  return h;
+}
+
+/* ===== Навигация ===== */
+const PAGES = { session: pSession, move: pMove, new: pNew, client: pClient, renew: pRenew, invite: pInvite };
+const TABS = { sched: renderSched, clients: renderClients, stats: renderStats, settings: renderSettings };
+const main = document.getElementById('main'), pagesEl = document.getElementById('pages'), fab = document.getElementById('fab'), tabsEl = document.getElementById('tabs'), toastEl = document.getElementById('toast');
+const livePages = () => [...pagesEl.querySelectorAll('.page:not(.closing)')];
+
+function render() {
+  main.innerHTML = TABS[state.tab]();
+  tabsEl.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.tab === state.tab));
+  fab.style.display = state.tab === 'sched' ? 'grid' : 'none';
+}
+function refreshPages() {
+  livePages().forEach((el, i) => {
+    const { p, id } = state.stack[i];
+    const sc = el.scrollTop;
+    el.innerHTML = `<div class="wrap">${PAGES[p](id)}</div>`;
+    el.scrollTop = sc;
+  });
+}
+const refresh = () => { render(); refreshPages(); };
+function syncBack() {
+  if (!inTG) return;
+  try { state.stack.length ? tg.BackButton.show() : tg.BackButton.hide(); } catch (e) {}
+}
+function push(p, id) {
+  state.stack.push({ p, id });
+  const el = document.createElement('div');
+  el.className = 'page';
+  el.innerHTML = `<div class="wrap">${PAGES[p](id)}</div>`;
+  pagesEl.appendChild(el);
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('in')));
+  syncBack();
+  hap('light');
+}
+function pop() {
+  const pages = livePages(), el = pages[pages.length - 1];
+  if (!el) return;
+  state.stack.pop();
+  el.classList.add('closing');
+  el.classList.remove('in');
+  setTimeout(() => el.remove(), 320);
+  syncBack();
+  refresh();
+}
+let toastT;
+function toast(msg) {
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => toastEl.classList.remove('show'), 2800);
+}
+const topErr = (id, msg) => { const pages = livePages(); const e = pages[pages.length - 1].querySelector('#' + id); if (e) e.textContent = msg; hap('error'); };
+
+/* ===== Действия ===== */
+const A = {
+  tab: d => { state.tab = d.tab; render(); window.scrollTo(0, 0); hap('select'); },
+  day: d => { state.sel = d.k; render(); hap('select'); },
+  week: d => {
+    const ws = addDays(fromKey(state.weekStart), 7 * Number(d.d));
+    state.weekStart = dkey(ws);
+    state.sel = state.weekStart === dkey(mondayOf(today0())) ? dkey(today0()) : dkey(ws);
+    render(); hap('select');
+  },
+  today: () => { state.weekStart = dkey(mondayOf(today0())); state.sel = dkey(today0()); render(); },
+  open: d => push(d.p, d.id),
+  openClient: d => push('client', d.id),
+  back: () => pop(),
+
+  new: () => {
+    const tk = dkey(today0());
+    state.form = { type: 'pers', people: [], k: state.sel < tk ? tk : state.sel, time: '18:00', repeat: false, ask: true };
+    push('new');
+  },
+  ftype: d => {
+    const f = state.form; f.type = d.v;
+    if (f.people.length > TYPES[d.v].cap) f.people = f.people.slice(0, TYPES[d.v].cap);
+    refreshPages(); hap('select');
+  },
+  fperson: d => {
+    const f = state.form, T = TYPES[f.type];
+    if (T.cap === 1) f.people = [d.v];
+    else if (f.people.includes(d.v)) f.people = f.people.filter(x => x !== d.v);
+    else if (f.people.length < T.cap) f.people.push(d.v);
+    else return topErr('ferr', `Максимум ${T.cap} человек`);
+    refreshPages(); hap('select');
+  },
+  fset: d => { state.form[d.k] = !state.form[d.k]; refreshPages(); hap('select'); },
+  fsave: () => {
+    const f = state.form, T = TYPES[f.type];
+    if (!f.people.length) return topErr('ferr', T.cap > 1 ? 'Выберите участников' : 'Выберите клиента');
+    if (!f.k || !f.time) return topErr('ferr', 'Укажите дату и время');
+    if (startOf({ k: f.k, time: f.time }) < new Date()) return topErr('ferr', 'Это время уже прошло');
+    const clash = day(f.k).find(x => !allCx(x) && overlaps(x, f.time, T.dur));
+    if (clash) return topErr('ferr', `В это время уже есть тренировка (${clash.time})`);
+    const s = mk(f.k, f.time, f.type, f.people);
+    s.id += '_n' + (++uid);
+    const hrs = (startOf(s) - new Date()) / 36e5;
+    s.people.forEach(p => { p.st = !C(p.cid).joined ? 'nobot' : hrs < 30 ? (f.ask ? 'pending' : 'confirmed') : 'planned'; });
+    day(f.k).push(s); sortDay(f.k);
+    if (f.repeat) {
+      const dow = fromKey(f.k).getDay();
+      TEMPLATES.push({ dow, t: f.time, type: f.type, p: f.people.slice(), from: f.k });
+      Object.keys(S).forEach(k => { if (k > f.k && fromKey(k).getDay() === dow) { S[k].push(mk(k, f.time, f.type, f.people)); sortDay(k); } });
+    }
+    const first = C(f.people[0]);
+    const tail = s.people.some(p => p.st === 'nobot') ? `${short(first)} пока не в боте` : s.people[0].st === 'pending' ? 'Запрос на подтверждение отправлен' : 'Напоминание уйдёт за 24 ч';
+    state.sel = f.k; state.weekStart = dkey(mondayOf(fromKey(f.k)));
+    pop();
+    toast(`Добавлено: ${fmtShort(fromKey(f.k))}, ${f.time}. ${tail}`);
+    hap('success');
+  },
+
+  remind: d => {
+    const s = findSes(d.id), p = s.people.find(x => x.cid === d.c), c = C(d.c);
+    toast(`Напоминание отправлено: ${short(c)}`); hap('success');
+    setTimeout(() => {
+      if (p.st !== 'pending') return;
+      p.st = 'confirmed'; refresh();
+      toast(`${short(c)} ${fem(c, 'подтвердил', 'подтвердила')} тренировку в ${s.time}`); hap('success');
+    }, 3500);
+  },
+  mark: d => {
+    const s = findSes(d.id), p = s.people.find(x => x.cid === d.c), c = C(d.c);
+    const was = ['came', 'missed'].includes(p.st);
+    p.st = p.st === d.v ? 'confirmed' : d.v;
+    const now = ['came', 'missed'].includes(p.st);
+    if (c.pack) { if (!was && now) c.pack.left = Math.max(0, c.pack.left - 1); if (was && !now) c.pack.left++; }
+    refresh(); hap('select');
+    if (now && c.pack) toast(`Списано 1 занятие · осталось ${c.pack.left}`);
+  },
+  cancelSes: async d => {
+    const s = findSes(d.id), multi = isMulti(s);
+    if (!(await ask(multi ? 'Отменить тренировку? Все участники получат уведомление.' : `Отменить тренировку? ${short(C(s.people[0].cid))} получит уведомление.`))) return;
+    s.people.forEach(p => { p.st = 'cancelled'; });
+    pop();
+    toast(multi ? 'Тренировка отменена. Участники получили уведомление' : 'Тренировка отменена. Клиент получил уведомление');
+    hap('warning');
+  },
+
+  move: d => { const s = findSes(d.id); state.mv = { k: s.k, time: null }; push('move', d.id); },
+  mvday: d => { state.mv.k = d.k; state.mv.time = null; refreshPages(); hap('select'); },
+  mvtime: d => { state.mv.time = d.v; refreshPages(); hap('select'); },
+  mvsave: d => {
+    const s = findSes(d.id), mv = state.mv;
+    if (!mv.time) return topErr('mverr', 'Выберите время');
+    S[s.k] = S[s.k].filter(x => x !== s);
+    s.k = mv.k; s.time = mv.time; s.id = `${mv.k}_${mv.time}_${s.type}_m${++uid}`;
+    const hrs = (startOf(s) - new Date()) / 36e5;
+    s.people.forEach(p => { if (p.st !== 'nobot') p.st = hrs < 30 ? 'pending' : 'planned'; });
+    day(mv.k).push(s); sortDay(mv.k);
+    state.sel = mv.k; state.weekStart = dkey(mondayOf(fromKey(mv.k)));
+    pop(); setTimeout(pop, 60);
+    toast(`Перенесено на ${fmtShort(fromKey(mv.k))}, ${mv.time}. Клиенту отправлен запрос`);
+    hap('success');
+  },
+
+  invite: d => {
+    const c = d.id ? C(d.id) : null;
+    state.invite = { name: c ? short(c) : '', code: 'inv_' + Math.random().toString(36).slice(2, 8) };
+    push('invite');
+  },
+  share: () => {
+    const iv = state.invite, link = inviteLink();
+    const text = `${iv.name ? iv.name + ', привет' : 'Привет'}! Это мой бот для тренировок: тут расписание, напоминания и запись. Нажмите «Запустить», чтобы подключиться.`;
+    const url = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(text)}`;
+    if (inTG) tg.openTelegramLink(url); else window.open(url, '_blank');
+    hap('success');
+  },
+  copy: () => {
+    const link = inviteLink();
+    const done = () => { toast('Ссылка скопирована'); hap('success'); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(link).then(done, () => toast(link));
+    else toast(link);
+  },
+
+  renew: d => push('renew', d.id),
+  pack: d => {
+    const c = C(d.id), p = PACKS[Number(d.i)];
+    c.pack = { total: p.n, left: (c.pack ? c.pack.left : 0) + p.n, until: addDays(today0(), p.days) };
+    pop();
+    toast(`${short(c)}: счёт на ${rub(p.price)} отправлен в Telegram`);
+    hap('success');
+  },
+  nudgeRenew: d => { const c = C(d.id); toast(`${short(c)} получит напоминание продлить абонемент`); hap('success'); },
+  nudgeBack: d => { const c = C(d.id); toast(`${short(c)} получит сообщение: «Давно не виделись! Запишемся на этой неделе?»`); hap('success'); },
+
+  period: d => { state.period = d.v; render(); hap('select'); },
+  toggle: d => { state.settings[d.k] = !state.settings[d.k]; render(); hap('select'); },
+  cancelH: d => { state.settings.cancelH = Number(d.v); render(); hap('select'); },
+  demoBtn: d => {
+    const m = { ok: 'Клиент нажал «Приду» — в расписании статус сразу станет «Подтверждено»', no: 'Клиент нажал «Не смогу» — вы получите уведомление, окно уйдёт листу ожидания', move: 'Клиент увидит свободные окна и выберет новое время' };
+    toast(m[d.v]); hap('light');
+  },
+  reset: async () => { if (await ask('Сбросить все изменения в демо?')) location.reload(); },
+};
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]');
+  if (!el) return;
+  const fn = A[el.dataset.act];
+  if (fn) { e.preventDefault(); fn(el.dataset, el); }
+});
+document.addEventListener('input', e => {
+  const el = e.target, k = el.dataset && el.dataset.in;
+  if (!k) return;
+  if (k === 'q') { state.q = el.value; const l = document.getElementById('clist'); if (l) l.innerHTML = clientList(); }
+  if (k === 'note') C(el.dataset.id).note = el.value;
+  if (k === 'iname') { state.invite.name = el.value; }
+  if (k === 'fdate') state.form.k = el.value;
+  if (k === 'ftime') state.form.time = el.value;
+  if (k === 'fdate' || k === 'ftime') { const pages = livePages(), er = pages.length && pages[pages.length - 1].querySelector('#ferr'); if (er) er.textContent = ''; }
+});
+
+/* ===== Старт ===== */
+tabsEl.innerHTML = [['sched', 'cal', 'Расписание'], ['clients', 'users', 'Клиенты'], ['stats', 'chart', 'Статистика'], ['settings', 'sliders', 'Настройки']]
+  .map(([t, i, l]) => `<button class="tab" data-act="tab" data-tab="${t}">${ic(i, 24)}<span>${l}</span></button>`).join('');
+fab.innerHTML = ic('plus', 26);
+
+if (inTG) {
+  tg.ready();
+  tg.expand();
+  try { if (tg.isVersionAtLeast('7.7')) tg.disableVerticalSwipes(); } catch (e) {}
+  tg.onEvent('themeChanged', applyScheme);
+  try { tg.BackButton.onClick(pop); } catch (e) {}
+} else {
+  const mq = matchMedia('(prefers-color-scheme: dark)');
+  if (mq.addEventListener) mq.addEventListener('change', applyScheme);
+}
+applyScheme();
+seedDemo();
+render();
+</script>
+</body>
+</html>
